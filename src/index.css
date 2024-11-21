@@ -1,3 +1,4 @@
+/* Importación de fuentes personalizadas */
 @font-face {
   font-family: 'Fuente';
   src: url('/src/assets/fonts/Fuente.ttf') format('truetype');
@@ -12,10 +13,17 @@
   font-style: normal;
 }
 
+/* Agregar las directivas de TailwindCSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Configurar la fuente global con Tailwind */
 body {
   font-family: 'Fuente', sans-serif;
 }
 
+/* Configuración básica para la estructura de la página */
 html, body {
   margin: 0;
   padding: 0;

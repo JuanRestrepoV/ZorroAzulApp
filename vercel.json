@@ -1,17 +1,15 @@
 {
-    "version": 2,
     "builds": [
       {
-        "src": "src/index.html",
-        "use": "@vercel/static"
-      },
-      {
-        "src": "vite.config.js",
+        "src": "src/index.js",
         "use": "@vercel/node"
       }
     ],
-    "env": {
-      "VITE_API_URL": "https://your-api-url.com"
-    }
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "/src/index.js"
+      }
+    ]
   }
   
