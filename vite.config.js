@@ -7,15 +7,29 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),  // Puedes usar `@` como alias para la carpeta `src` en las importaciones
+      '@': path.resolve(__dirname, './src'), // Alias para la carpeta `src`
     },
   },
   server: {
     proxy: {
-      '/api': 'http://localhost:5000', // Si tu backend está en el puerto 5000 (ajusta según sea necesario)
+      '/api': {
+        target: 'http://localhost:5000', // Backend local en desarrollo
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''), // Elimina `/api` de las solicitudes
+      },
     },
   },
   build: {
-    outDir: 'dist', // Asegúrate de que el directorio de salida sea 'dist'
+    outDir: 'dist', // Directorio de salida para producción
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'], // Divide las dependencias principales en un archivo separado
+        },
+      },
+    },
+  },
+  define: {
+    'process.env': {}, // Asegura la compatibilidad con `process.env` en Vite
   },
 })
