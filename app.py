@@ -8,7 +8,7 @@ from config import Config
 app = Flask(__name__)
 app.config.from_object(Config)
 
-# Configuración de CORS (solo esto, eliminando after_request)
+# Configuración de CORS
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 # Inicializar la base de datos
@@ -49,9 +49,57 @@ class Reservation(db.Model):
 def home():
     return "¡Conexión a PostgreSQL establecida correctamente!"
 
+# Endpoint para registrar usuarios
+@app.route('/register', methods=['POST', 'OPTIONS'])
+def register_user():
+    if request.method == 'OPTIONS':
+        return jsonify({"message": "OK"}), 200
+
+    data = request.get_json()
+    if not data or not data.get('username') or not data.get('email') or not data.get('password'):
+        return jsonify({"error": "Faltan campos obligatorios"}), 400
+
+    # Verificar si el usuario o correo ya existen
+    if User.query.filter_by(username=data['username']).first():
+        return jsonify({"error": "El nombre de usuario ya está en uso"}), 400
+    if User.query.filter_by(email=data['email']).first():
+        return jsonify({"error": "El correo electrónico ya está en uso"}), 400
+
+    # Crear el usuario
+    hashed_password = generate_password_hash(data['password'], method='pbkdf2:sha256')
+    new_user = User(username=data['username'], email=data['email'], password=hashed_password)
+
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({"message": "Usuario registrado exitosamente"}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Error al registrar usuario", "details": str(e)}), 500
+
+# Endpoint para iniciar sesión
+@app.route('/login', methods=['POST', 'OPTIONS'])
+def login_user():
+    if request.method == 'OPTIONS':
+        return jsonify({"message": "OK"}), 200
+
+    data = request.get_json()
+    if not data or not data.get('email') or not data.get('password'):
+        return jsonify({"error": "Faltan campos obligatorios"}), 400
+
+    # Verificar el usuario
+    user = User.query.filter_by(email=data['email']).first()
+    if not user or not check_password_hash(user.password, data['password']):
+        return jsonify({"error": "Credenciales inválidas"}), 401
+
+    return jsonify({"message": "Inicio de sesión exitoso", "user": {"id": user.id, "username": user.username}}), 200
+
 # Endpoint para obtener todos los eventos
-@app.route('/events', methods=['GET'])
+@app.route('/events', methods=['GET', 'OPTIONS'])
 def get_events():
+    if request.method == 'OPTIONS':
+        return jsonify({"message": "OK"}), 200
+
     try:
         events = Event.query.all()
         events_list = [
@@ -71,11 +119,12 @@ def get_events():
         return jsonify({"error": "Error al obtener eventos", "details": str(e)}), 500
 
 # Endpoint para crear una reserva
-@app.route('/reservations', methods=['POST'])
+@app.route('/reservations', methods=['POST', 'OPTIONS'])
 def create_reservation():
-    data = request.get_json()
+    if request.method == 'OPTIONS':
+        return jsonify({"message": "OK"}), 200
 
-    # Validación básica
+    data = request.get_json()
     if not data or not data.get('user_id') or not data.get('event_id') or not data.get('date') or not data.get('time') or not data.get('services'):
         return jsonify({"error": "Faltan campos obligatorios"}), 400
 
