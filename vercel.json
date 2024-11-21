@@ -2,18 +2,16 @@
     "version": 2,
     "builds": [
       {
-        "src": "src/**/*",
-        "use": "@vercel/static-build",
-        "config": {
-          "distDir": "dist"   # Vercel generará la carpeta `dist` al compilar
-        }
+        "src": "src/index.html",
+        "use": "@vercel/static"
+      },
+      {
+        "src": "vite.config.js",
+        "use": "@vercel/node"
       }
     ],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "/src/$1"
-      }
-    ]
+    "env": {
+      "VITE_API_URL": "https://your-api-url.com"
+    }
   }
   
