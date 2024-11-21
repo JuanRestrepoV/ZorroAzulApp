@@ -1,0 +1,24 @@
+@font-face {
+  font-family: 'Fuente';
+  src: url('/src/assets/fonts/Fuente.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'FuenteTitulos';
+  src: url('/src/assets/fonts/FuenteTitulos.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Fuente', sans-serif;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
