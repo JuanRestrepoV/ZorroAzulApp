@@ -4,6 +4,7 @@ import NotFound from '../NotFound';
 import Reservas from '../Reservas';
 import DashBoard from '../DashBoard';
 import Confirmation from '../Confirmation'; // Importa el componente de confirmación
+import SpaceSelection from '../SpaceSelection'; // Importa el componente de selección de espacios
 import Navbar from '../../Components/Navbar';
 import './App.css';
 
@@ -15,7 +16,8 @@ const AppRoutes = () => {
     { path: '/Reservas', element: <><Navbar /><Reservas /></> },
     { path: '/dashboard/user', element: <><Navbar /><DashBoard userType="user" /></> },
     { path: '/dashboard/admin', element: <><Navbar /><DashBoard userType="admin" /></> },
-    { path: '/confirmacion', element: <><Navbar /><Confirmation /></> },  // Agrega esta línea para la ruta de confirmación
+    { path: '/confirmacion', element: <><Navbar /><Confirmation /></> }, // Ruta para confirmación
+    { path: '/space-selection', element: <><Navbar /><SpaceSelection /></> }, // Nueva ruta para selección de espacios
     { path: '/*', element: <><Navbar /><NotFound /></> },
   ]);
 

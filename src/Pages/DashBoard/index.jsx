@@ -2,8 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../Components/Navbar/Layout";
 import ModalCardDetails from "../../Components/Modals/ModalCardDetails";
-import ModalReserveForm from "../../Components/Modals/ModalReserveForm";
-import ModalAdditionalServices from "../../Components/Modals/ModalAdditionalServices";
+import ModalTimeSlot from "../../Components/Modals/ModalTimeSlot";
+import ModalHourSelection from "../../Components/Modals/ModalHourSelection";
+import ModalCapacity from "../../Components/Modals/ModalCapacity";
+import ModalFloorSelection from "../../Components/Modals/ModalFloorSelection";
 
 const cardData = [
   {
@@ -39,100 +41,93 @@ const cardData = [
 
 function DashBoard() {
   const [selectedCard, setSelectedCard] = useState(null);
-  const [isReserveModalOpen, setIsReserveModalOpen] = useState(false);
-  const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
-  const [name, setName] = useState("");
-  const [validationMessage, setValidationMessage] = useState("");
-  const [selectedServices, setSelectedServices] = useState([]);
+  const [isTimeSlotModalOpen, setIsTimeSlotModalOpen] = useState(false);
+  const [isHourSelectionModalOpen, setIsHourSelectionModalOpen] = useState(false);
+  const [isCapacityModalOpen, setIsCapacityModalOpen] = useState(false);
+  const [isFloorSelectionModalOpen, setIsFloorSelectionModalOpen] = useState(false);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
+  const [selectedHourRange, setSelectedHourRange] = useState(null);
+  const [selectedCapacity, setSelectedCapacity] = useState(0);
+  const [selectedFloor, setSelectedFloor] = useState(null);
   const navigate = useNavigate();
 
   const openModal = (card) => setSelectedCard(card);
 
   const closeModal = () => {
     setSelectedCard(null);
-    setIsReserveModalOpen(false);
-    setIsServiceModalOpen(false);
+    setIsTimeSlotModalOpen(false);
+    setIsHourSelectionModalOpen(false);
+    setIsCapacityModalOpen(false);
+    setIsFloorSelectionModalOpen(false);
+    setSelectedTimeSlot(null);
+    setSelectedHourRange(null);
+    setSelectedCapacity(0);
+    setSelectedFloor(null);
   };
 
-  const openReserveModal = () => {
+  const openTimeSlotModal = () => {
     if (!selectedCard) {
-      setValidationMessage("Por favor selecciona un evento para reservar.");
+      alert("Por favor selecciona un evento para reservar.");
       return;
     }
-    setIsReserveModalOpen(true);
-    setValidationMessage("");
+    setIsTimeSlotModalOpen(true);
   };
 
-  const closeReserveModal = () => {
-    setIsReserveModalOpen(false);
-    setValidationMessage("");
+  const closeTimeSlotModal = () => {
+    setIsTimeSlotModalOpen(false);
   };
 
-  const openServiceModal = () => {
-    if (name && selectedDate && selectedTime) {
-      setIsServiceModalOpen(true);
-      setIsReserveModalOpen(false);
-      setValidationMessage("");
-    } else {
-      setValidationMessage("Por favor completa el nombre, fecha y hora antes de continuar.");
-    }
-  };
-
-  const closeServiceModal = () => {
-    setIsServiceModalOpen(false);
-    setValidationMessage("");
-  };
-
-  const toggleService = (service) => {
-    if (selectedServices.includes(service)) {
-      setSelectedServices(selectedServices.filter((s) => s !== service));
-    } else {
-      setSelectedServices([...selectedServices, service]);
-    }
-  };
-
-  const confirmReservation = async () => {
-    if (!selectedCard) {
-      setValidationMessage("Por favor selecciona un evento antes de confirmar la reserva.");
+  const openHourSelectionModal = () => {
+    if (!selectedTimeSlot) {
+      alert("Por favor selecciona una franja horaria antes de continuar.");
       return;
     }
+    setIsHourSelectionModalOpen(true);
+    setIsTimeSlotModalOpen(false);
+  };
 
-    if (selectedServices.length > 0) {
-      try {
-        const response = await fetch("http://localhost:5000/reservations", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            user_id: 1, // Cambia esto por el ID real del usuario autenticado
-            event_id: selectedCard.id,
-            date: selectedDate,
-            time: selectedTime,
-            services: selectedServices,
-          }),
-        });
+  const closeHourSelectionModal = () => {
+    setIsHourSelectionModalOpen(false);
+  };
 
-        if (response.ok) {
-          navigate("/confirmacion");
-        } else {
-          const error = await response.json();
-          setValidationMessage(`Error: ${error.error}`);
-        }
-      } catch (error) {
-        console.error("Error de conexión:", error);
-      }
-    } else {
-      setValidationMessage("Selecciona al menos un servicio para confirmar la reserva.");
+  const openCapacityModal = () => {
+    if (!selectedHourRange) {
+      alert("Por favor selecciona un rango de horas antes de continuar.");
+      return;
     }
+    setIsCapacityModalOpen(true);
+    setIsHourSelectionModalOpen(false);
+  };
+
+  const closeCapacityModal = () => {
+    setIsCapacityModalOpen(false);
+  };
+
+  const openFloorSelectionModal = () => {
+    if (selectedCapacity <= 0) {
+      alert("Por favor selecciona una cantidad válida de personas antes de continuar.");
+      return;
+    }
+    setIsFloorSelectionModalOpen(true);
+    setIsCapacityModalOpen(false);
+  };
+
+  const closeFloorSelectionModal = () => {
+    setIsFloorSelectionModalOpen(false);
   };
 
   const goBack = () => {
-    if (isServiceModalOpen) {
-      setIsServiceModalOpen(false);
-      setIsReserveModalOpen(true);
-    } else if (isReserveModalOpen) {
-      setIsReserveModalOpen(false);
+    if (isFloorSelectionModalOpen) {
+      setIsFloorSelectionModalOpen(false);
+      setIsCapacityModalOpen(true);
+    } else if (isCapacityModalOpen) {
+      setIsCapacityModalOpen(false);
+      setIsHourSelectionModalOpen(true);
+    } else if (isHourSelectionModalOpen) {
+      setIsHourSelectionModalOpen(false);
+      setIsTimeSlotModalOpen(true);
+    } else if (isTimeSlotModalOpen) {
+      setIsTimeSlotModalOpen(false);
       setSelectedCard(null);
     } else {
       setSelectedCard(null);
@@ -175,34 +170,49 @@ function DashBoard() {
         </div>
 
         {/* Modals */}
-        <ModalCardDetails
-          selectedCard={selectedCard}
-          closeModal={closeModal}
-          openReserveModal={openReserveModal}
-          goBack={goBack}
-        />
-        {isReserveModalOpen && (
-          <ModalReserveForm
-            closeReserveModal={closeReserveModal}
-            openServiceModal={openServiceModal}
+        {selectedCard && (
+          <ModalCardDetails
+            selectedCard={selectedCard}
+            closeModal={closeModal}
+            openReserveModal={openTimeSlotModal}
             goBack={goBack}
-            name={name}
-            setName={setName}
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-            selectedTime={selectedTime}
-            setSelectedTime={setSelectedTime}
-            validationMessage={validationMessage}
           />
         )}
-        {isServiceModalOpen && (
-          <ModalAdditionalServices
-            closeServiceModal={closeServiceModal}
-            confirmReservation={confirmReservation}
+        {isTimeSlotModalOpen && (
+          <ModalTimeSlot
+            closeTimeSlotModal={closeTimeSlotModal}
+            openHourSelectionModal={openHourSelectionModal}
+            setTimeSlot={setSelectedTimeSlot}
+            selectedTimeSlot={selectedTimeSlot}
             goBack={goBack}
-            selectedServices={selectedServices}
-            toggleService={toggleService}
-            validationMessage={validationMessage}
+          />
+        )}
+        {isHourSelectionModalOpen && (
+          <ModalHourSelection
+            closeHourSelectionModal={closeHourSelectionModal}
+            openCapacityModal={openCapacityModal}
+            selectedTimeSlot={selectedTimeSlot}
+            setSelectedHourRange={setSelectedHourRange}
+            selectedHourRange={selectedHourRange}
+            goBack={goBack}
+          />
+        )}
+        {isCapacityModalOpen && (
+          <ModalCapacity
+            closeCapacityModal={closeCapacityModal}
+            openFloorSelectionModal={openFloorSelectionModal}
+            selectedCapacity={selectedCapacity}
+            setSelectedCapacity={setSelectedCapacity}
+            goBack={goBack}
+          />
+        )}
+        {isFloorSelectionModalOpen && (
+          <ModalFloorSelection
+            closeFloorSelectionModal={closeFloorSelectionModal}
+            openSpaceSelectionModal={() => navigate("/space-selection")}
+            selectedFloor={selectedFloor}
+            setSelectedFloor={setSelectedFloor}
+            goBack={goBack}
           />
         )}
       </div>
