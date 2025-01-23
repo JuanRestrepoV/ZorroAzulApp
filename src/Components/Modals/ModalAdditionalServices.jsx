@@ -1,6 +1,4 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 const ModalAdditionalServices = ({
   closeServiceModal,
@@ -8,11 +6,13 @@ const ModalAdditionalServices = ({
   selectedServices,
   toggleService,
   validationMessage,
-  goBack,
 }) => {
+  console.log("Modal de servicios adicionales abierto."); // Debug: Apertura del modal
+
   const handleClickOutside = (e) => {
     if (e.target.classList.contains("modal-overlay")) {
-      closeServiceModal(); // Cierra el modal si haces clic fuera
+      console.log("Haciendo clic fuera del modal, cerrando..."); // Debug: Click fuera
+      closeServiceModal();
     }
   };
 
@@ -22,14 +22,6 @@ const ModalAdditionalServices = ({
       onClick={handleClickOutside}
     >
       <div className="bg-black text-white p-6 rounded-lg shadow-lg w-96 relative">
-        {/* Flecha para ir hacia atrás */}
-        <button
-          onClick={goBack}
-          className="absolute top-2 left-2 text-gray-400 hover:text-gray-600 cursor-pointer"
-        >
-          <FontAwesomeIcon icon={faArrowLeft} />
-        </button>
-
         {/* Botón de cerrar */}
         <button
           onClick={closeServiceModal}

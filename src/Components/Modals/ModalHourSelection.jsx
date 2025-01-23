@@ -73,12 +73,16 @@ const ModalHourSelection = ({
 
         {/* Botón de siguiente */}
         <button
-          onClick={openCapacityModal}
-          className="w-full mt-6 py-2 bg-lime-500 text-white font-semibold rounded-lg hover:bg-lime-600 transition-all"
-          disabled={!selectedHourRange} // Deshabilitar si no hay selección
-        >
-          Siguiente
-        </button>
+  onClick={openCapacityModal}
+  className={`w-full mt-6 py-2 rounded-lg font-semibold transition-all ${
+    selectedHourRange
+      ? "bg-lime-500 text-white hover:bg-lime-600"
+      : "bg-gray-400 text-gray-700 cursor-not-allowed"
+  }`}
+  disabled={!selectedHourRange} // Deshabilitar si no hay selección
+>
+  Siguiente
+</button>
       </div>
     </div>
   );

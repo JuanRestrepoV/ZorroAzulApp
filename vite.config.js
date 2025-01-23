@@ -1,35 +1,38 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import path from 'path'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import svgr from 'vite-plugin-svgr';
+import path from 'path';
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    svgr(), // Agrega este plugin para manejar SVG como componentes de React
+  ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'), // Alias para la carpeta `src`
+      '@': path.resolve(__dirname, './src'),
     },
   },
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:5000', // Backend local en desarrollo
+        target: 'http://localhost:5000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''), // Elimina `/api` de las solicitudes
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
   },
   build: {
-    outDir: 'dist', // Directorio de salida para producción
+    outDir: 'dist',
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'], // Divide las dependencias principales en un archivo separado
+          vendor: ['react', 'react-dom'],
         },
       },
     },
   },
   define: {
-    'process.env': {}, // Asegura la compatibilidad con `process.env` en Vite
+    'process.env': {},
   },
-})
+});

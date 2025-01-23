@@ -42,13 +42,13 @@ const ModalCardDetails = ({ selectedCard, closeModal, openReserveModal, goBack }
         {/* Detalles del card en el lado derecho */}
         <div className="w-full md:w-1/2 flex flex-col justify-between overflow-auto">
           <div>
-            <h2 className="text-xl font-bold mb-2">{selectedCard.title}</h2>
-            <p className="text-sm font-semibold mb-2">{selectedCard.capacity}</p>
-            <p className="text-sm mb-4">{selectedCard.description}</p>
+            <h2 className="text-xl font-FuenteTitulos mb-2">{selectedCard.title}</h2>
+            <p className="text-sm font-FuenteTitulos mb-2">{selectedCard.capacity}</p>
+            <p className="text-sm font-Textos mb-4">{selectedCard.description}</p>
           </div>
           {selectedCard.services && (
             <div className="space-y-4">
-              <h3 className="text-lg font-bold">Servicios incluidos:</h3>
+              <h3 className="text-lg font-FuenteTitulos">Servicios incluidos:</h3>
               <div className="grid grid-cols-2 gap-2">
                 {selectedCard.services.map((service, index) => (
                   <div key={index} className="flex flex-col items-center text-center">
@@ -67,7 +67,7 @@ const ModalCardDetails = ({ selectedCard, closeModal, openReserveModal, goBack }
             <p className="text-sm font-bold mb-4">Precio: {selectedCard.price}</p>
             <button
               onClick={openReserveModal}
-              className="px-4 py-2 bg-lime-500 text-white font-semibold rounded-lg hover:bg-lime-600"
+              className="px-4 py-2 bg-lime-500 text-white font-Textos rounded-lg hover:bg-lime-600"
             >
               Reservar
             </button>

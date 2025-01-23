@@ -19,11 +19,19 @@ function Confirmation() {
 
         {/* Contenido principal de la confirmación */}
         <div className="relative z-10 flex flex-col justify-center items-center text-center text-white h-full px-4">
-          <h1 className="text-4xl font-bold mb-4" style={{ color: '#c9ff13' }}>¡RESERVA CONFIRMADA!</h1>
+          <h1 className="text-4xl font-bold mb-4" style={{ color: '#c9ff13' }}>
+            ¡RESERVA RECIBIDA!
+          </h1>
           <p className="text-lg mb-4">
-            Has elegido el lugar perfecto para tu evento ejecutivo. Prepárate para una experiencia exclusiva en Zorro Azul que dejará huella en cada detalle.
+            Hemos recibido tu solicitud de reserva y actualmente está en proceso de revisión.
           </p>
-          <p className="text-xl font-semibold">¡Nos vemos pronto en las alturas!</p>
+          <p className="text-lg mb-4">
+            Recibirás un correo electrónico tan pronto como confirmemos tu reserva. En ese momento, 
+            te proporcionaremos los detalles para realizar el abono del pago.
+          </p>
+          <p className="text-xl font-semibold">
+            ¡Gracias por confiar en Zorro Azul!
+          </p>
         </div>
       </div>
     </Layout>

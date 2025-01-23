@@ -17,7 +17,13 @@ const ModalTimeSlot = ({
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+      className="fixed inset-0 flex items-center justify-center z-50"
+      style={{
+        backgroundImage: `url('../../Assets/1ModalBackground.jpg')`, // Uso del path proporcionado
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
       onClick={(e) => {
         if (e.target.classList.contains("modal-overlay")) closeTimeSlotModal();
       }}
@@ -43,7 +49,9 @@ const ModalTimeSlot = ({
         </button>
 
         {/* Título */}
-        <h2 className="text-lg text-white font-semibold mb-4 text-center">Selecciona una franja horaria</h2>
+        <h2 className="text-lg text-white font-FuenteTitulos mb-4 text-center">
+          Selecciona una franja horaria
+        </h2>
         <hr className="border-t-2 border-lime-500 mb-4" />
 
         {/* Opciones de franja horaria */}
@@ -52,7 +60,7 @@ const ModalTimeSlot = ({
             <button
               key={slot}
               onClick={() => handleTimeSlotClick(slot)}
-              className={`px-4 py-2 rounded-lg text-center font-semibold border-2 transition-all ${
+              className={`px-4 py-2 rounded-lg text-center font-Textos border-2 transition-all ${
                 isSelected(slot)
                   ? "bg-black text-white border-lime-500"
                   : "bg-gray-500 text-white border-white hover:bg-black hover:border-lime-500"
@@ -66,7 +74,11 @@ const ModalTimeSlot = ({
         {/* Botón de siguiente */}
         <button
           onClick={openHourSelectionModal}
-          className="w-full mt-6 py-2 bg-lime-500 text-white font-semibold rounded-lg hover:bg-lime-600 transition-all"
+          className={`w-full mt-6 py-2 rounded-lg font-semibold transition-all ${
+            selectedTimeSlot
+              ? "bg-lime-500 text-white hover:bg-lime-600"
+              : "bg-gray-400 text-gray-700 cursor-not-allowed"
+          }`}
           disabled={!selectedTimeSlot} // Deshabilitar si no hay selección
         >
           Siguiente

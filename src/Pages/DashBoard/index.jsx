@@ -6,6 +6,8 @@ import ModalTimeSlot from "../../Components/Modals/ModalTimeSlot";
 import ModalHourSelection from "../../Components/Modals/ModalHourSelection";
 import ModalCapacity from "../../Components/Modals/ModalCapacity";
 import ModalFloorSelection from "../../Components/Modals/ModalFloorSelection";
+import ModalDateSelection from "../../Components/Modals/ModalDateSelection";
+import backgroundImage from "../../Assets/dashboardBackground.png";
 
 const cardData = [
   {
@@ -43,8 +45,10 @@ function DashBoard() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [isTimeSlotModalOpen, setIsTimeSlotModalOpen] = useState(false);
   const [isHourSelectionModalOpen, setIsHourSelectionModalOpen] = useState(false);
-  const [isCapacityModalOpen, setIsCapacityModalOpen] = useState(false);
+  const [isCapacityModalOpen, setIsCapacityModalOpen] =useState(false);
+  const [isDateSelectionModalOpen, setIsDateSelectionModalOpen] = useState(false);
   const [isFloorSelectionModalOpen, setIsFloorSelectionModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [selectedHourRange, setSelectedHourRange] = useState(null);
   const [selectedCapacity, setSelectedCapacity] = useState(0);
@@ -58,7 +62,9 @@ function DashBoard() {
     setIsTimeSlotModalOpen(false);
     setIsHourSelectionModalOpen(false);
     setIsCapacityModalOpen(false);
+    setIsDateSelectionModalOpen(false);
     setIsFloorSelectionModalOpen(false);
+    setSelectedDate(null);
     setSelectedTimeSlot(null);
     setSelectedHourRange(null);
     setSelectedCapacity(0);
@@ -73,9 +79,7 @@ function DashBoard() {
     setIsTimeSlotModalOpen(true);
   };
 
-  const closeTimeSlotModal = () => {
-    setIsTimeSlotModalOpen(false);
-  };
+  const closeTimeSlotModal = () => setIsTimeSlotModalOpen(false);
 
   const openHourSelectionModal = () => {
     if (!selectedTimeSlot) {
@@ -86,9 +90,7 @@ function DashBoard() {
     setIsTimeSlotModalOpen(false);
   };
 
-  const closeHourSelectionModal = () => {
-    setIsHourSelectionModalOpen(false);
-  };
+  const closeHourSelectionModal = () => setIsHourSelectionModalOpen(false);
 
   const openCapacityModal = () => {
     if (!selectedHourRange) {
@@ -99,26 +101,36 @@ function DashBoard() {
     setIsHourSelectionModalOpen(false);
   };
 
-  const closeCapacityModal = () => {
-    setIsCapacityModalOpen(false);
-  };
+  const closeCapacityModal = () => setIsCapacityModalOpen(false);
 
-  const openFloorSelectionModal = () => {
+  const openDateSelectionModal = () => {
     if (selectedCapacity <= 0) {
       alert("Por favor selecciona una cantidad válida de personas antes de continuar.");
       return;
     }
-    setIsFloorSelectionModalOpen(true);
+    setIsDateSelectionModalOpen(true);
     setIsCapacityModalOpen(false);
   };
 
-  const closeFloorSelectionModal = () => {
-    setIsFloorSelectionModalOpen(false);
+  const closeDateSelectionModal = () => setIsDateSelectionModalOpen(false);
+
+  const openFloorSelectionModal = () => {
+    if (!selectedDate) {
+      alert("Por favor selecciona una fecha antes de continuar.");
+      return;
+    }
+    setIsFloorSelectionModalOpen(true);
+    setIsDateSelectionModalOpen(false);
   };
+
+  const closeFloorSelectionModal = () => setIsFloorSelectionModalOpen(false);
 
   const goBack = () => {
     if (isFloorSelectionModalOpen) {
       setIsFloorSelectionModalOpen(false);
+      setIsDateSelectionModalOpen(true);
+    } else if (isDateSelectionModalOpen) {
+      setIsDateSelectionModalOpen(false);
       setIsCapacityModalOpen(true);
     } else if (isCapacityModalOpen) {
       setIsCapacityModalOpen(false);
@@ -136,30 +148,28 @@ function DashBoard() {
 
   return (
     <Layout>
-      <div className="container mx-auto">
-        {/* Fondo de la página */}
+      <div className="container mx-auto flex items-center justify-center">
         <div
-          className="absolute inset-0 bg-cover bg-center filter blur-md"
+          className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage:
-              "url('https://images.pexels.com/photos/1317370/pexels-photo-1317370.jpeg?auto=compress&cs=tinysrgb&w=600')",
+            backgroundImage: `url(${backgroundImage})`,
           }}
         ></div>
-        <div className="absolute inset-0 bg-black opacity-50"></div>
 
-        <div className="relative z-10">
-          <h1 className="text-2xl font-bold mb-4 text-white">DashBoard</h1>
-          <div className="grid grid-cols-2 gap-4">
+        <div className="absolute inset-0 bg-black opacity-50"></div>
+        <div className="relative z-10 flex flex-col items-center justify-start">
+          <h1 className="text-3xl font-FuenteTitulos mb-6 text-white">EVENTOS</h1>
+          <div className="grid grid-cols-2 gap-6">
             {cardData.map((card) => (
               <div
                 key={card.id}
-                className="bg-gray-200 p-4 rounded-lg shadow-lg cursor-pointer hover:scale-105 transition-transform duration-300"
+                className="bg-gray-200 p-2 rounded-lg shadow-lg cursor-pointer hover:scale-105 transition-transform duration-300 aspect-square w-80"
                 onClick={() => openModal(card)}
               >
-                <img src={card.image} alt={card.title} className="w-full h-32 object-cover rounded" />
-                <h2 className="text-lg font-bold mt-2">{card.title}</h2>
-                <p className="text-sm">{card.capacity}</p>
-                <p className="text-sm">
+                <img src={card.image} alt={card.title} className="w-full h-full object-cover rounded" />
+                <h2 className="text-md font-bold mt-2 text-center">{card.title}</h2>
+                <p className="text-xs text-center font-semibold text-gray-500">{card.capacity}</p>
+                <p className="text-xs text-justify mt-1">
                   {card.description.length > 50
                     ? `${card.description.slice(0, 50)}...`
                     : card.description}
@@ -167,9 +177,10 @@ function DashBoard() {
               </div>
             ))}
           </div>
+
         </div>
 
-        {/* Modals */}
+
         {selectedCard && (
           <ModalCardDetails
             selectedCard={selectedCard}
@@ -200,16 +211,24 @@ function DashBoard() {
         {isCapacityModalOpen && (
           <ModalCapacity
             closeCapacityModal={closeCapacityModal}
-            openFloorSelectionModal={openFloorSelectionModal}
+            openDateSelectionModal={openDateSelectionModal}
             selectedCapacity={selectedCapacity}
             setSelectedCapacity={setSelectedCapacity}
             goBack={goBack}
           />
         )}
+        {isDateSelectionModalOpen && (
+          <ModalDateSelection
+            closeDateSelectionModal={closeDateSelectionModal}
+            openFloorSelectionModal={openFloorSelectionModal}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+          />
+        )}
         {isFloorSelectionModalOpen && (
           <ModalFloorSelection
             closeFloorSelectionModal={closeFloorSelectionModal}
-            openSpaceSelectionModal={() => navigate("/space-selection")}
+            openSpaceSelectionModal={() => navigate("/piso-11")}
             selectedFloor={selectedFloor}
             setSelectedFloor={setSelectedFloor}
             goBack={goBack}

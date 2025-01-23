@@ -1,26 +1,28 @@
-/* Importación de fuentes personalizadas */
-@font-face {
-  font-family: 'Fuente';
-  src: url('/fonts/Fuente.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'FuenteTitulos';
-  src: url('/fonts/FuenteTitulos.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-/* Agregar las directivas de TailwindCSS */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Configurar la fuente global con Tailwind */
+/* Configurar las fuentes globales con Tailwind */
+@font-face {
+  font-family: 'Fuente'; /* Fuente para el cuerpo */
+  src: url('./Assets/fonts/Textos.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'FuenteTitulos'; /* Fuente para los títulos */
+  src: url('./Assets/fonts/Titulos.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
-  font-family: 'Fuente', sans-serif;
+  @apply font-Fuente; /* Aplica la fuente para el cuerpo */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-FuenteTitulos; /* Aplica la fuente para los títulos */
 }
 
 /* Configuración básica para la estructura de la página */

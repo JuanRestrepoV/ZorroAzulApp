@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 const ModalCapacity = ({
   closeCapacityModal,
-  openFloorSelectionModal,
+  openDateSelectionModal, // Cambiado a openDateSelectionModal
   selectedCapacity,
   setSelectedCapacity,
   goBack,
@@ -16,7 +16,7 @@ const ModalCapacity = ({
 
   const handleConfirm = () => {
     setSelectedCapacity(localCapacity);
-    openFloorSelectionModal();
+    openDateSelectionModal(); // Llama al modal correcto
   };
 
   return (
@@ -66,12 +66,16 @@ const ModalCapacity = ({
 
         {/* Botón de confirmar */}
         <button
-          onClick={handleConfirm}
-          className="w-full py-2 bg-lime-500 text-white font-semibold rounded hover:bg-lime-600 transition-all"
-          disabled={localCapacity === 0} // Deshabilitar si no se ha ingresado un valor válido.
-        >
-          Siguiente
-        </button>
+  onClick={handleConfirm}
+  className={`w-full py-2 rounded-lg font-semibold transition-all ${
+    localCapacity > 0
+      ? "bg-lime-500 text-white hover:bg-lime-600"
+      : "bg-gray-400 text-gray-700 cursor-not-allowed"
+  }`}
+  disabled={localCapacity === 0} // Deshabilitar si no hay selección válida
+>
+  Siguiente
+</button>
       </div>
     </div>
   );
