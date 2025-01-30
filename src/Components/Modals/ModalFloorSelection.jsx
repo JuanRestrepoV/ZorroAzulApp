@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const ModalFloorSelection = ({
   closeFloorSelectionModal,
   selectedFloor,
   setSelectedFloor,
+  floors,
   goBack,
 }) => {
   const navigate = useNavigate();
@@ -16,9 +17,9 @@ const ModalFloorSelection = ({
   const isSelected = (floor) => selectedFloor === floor;
 
   const handleNext = () => {
-    if (selectedFloor === "Piso 11") {
+    if (selectedFloor.name === "PISO 11") {
       navigate("/piso-11"); // Redirige al mapa del Piso 11
-    } else if (selectedFloor === "Piso 12") {
+    } else if (selectedFloor.name === "PISO 12") {
       navigate("/piso-12"); // Redirige al mapa del Piso 12
     } else {
       alert("Por favor selecciona un piso disponible.");
@@ -50,14 +51,32 @@ const ModalFloorSelection = ({
           ✕
         </button>
 
-        <h2 className="text-lg text-white font-semibold mb-4 text-center">
+        <h2 className="text-lg text-white font-medium mb-4 text-center">
           Selecciona el piso
         </h2>
         <hr className="border-t-2 border-lime-500 mb-4" />
 
         <div className="grid grid-cols-1 gap-4">
+          { floors.map((floor) => (
+            <div
+              key={floor.id}
+              onClick={() => handleFloorSelection(floor)}
+              className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                isSelected(floor.name)
+                  ? "bg-black text-white border-lime-500"
+                  : "bg-gray-500 text-white border-white hover:bg-black hover:border-lime-500"
+              }`}
+            >
+              <img
+                src="https://images.pexels.com/photos/2034851/pexels-photo-2034851.jpeg?auto=compress&cs=tinysrgb&w=300"
+                alt={floor.name}
+                className="w-full h-32 object-cover rounded mb-2"
+              />
+              <h3 className="text-center font-medium">{floor.name}</h3>
+            </div>
+          ))}
           {/* Opción Piso 11 */}
-          <div
+          {/* <div
             onClick={() => handleFloorSelection("Piso 11")}
             className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
               isSelected("Piso 11")
@@ -70,11 +89,11 @@ const ModalFloorSelection = ({
               alt="Piso 11"
               className="w-full h-32 object-cover rounded mb-2"
             />
-            <h3 className="text-center font-semibold">Piso 11</h3>
-          </div>
+            <h3 className="text-center font-medium">Piso 11</h3>
+          </div> */}
 
           {/* Opción Piso 12 */}
-          <div
+          {/* <div
             onClick={() => handleFloorSelection("Piso 12")}
             className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
               isSelected("Piso 12")
@@ -87,8 +106,8 @@ const ModalFloorSelection = ({
               alt="Piso 12"
               className="w-full h-32 object-cover rounded mb-2"
             />
-            <h3 className="text-center font-semibold">Piso 12</h3>
-          </div>
+            <h3 className="text-center font-medium">Piso 12</h3>
+          </div> */}
         </div>
 
         <button

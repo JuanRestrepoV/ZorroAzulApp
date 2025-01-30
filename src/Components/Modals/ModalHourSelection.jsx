@@ -49,7 +49,7 @@ const ModalHourSelection = ({
         </button>
 
         {/* Título */}
-        <h2 className="text-lg text-white font-semibold mb-4 text-center">
+        <h2 className="text-lg text-white font-medium mb-4 text-center">
           Selecciona un rango de horas
         </h2>
         <hr className="border-t-2 border-lime-500 mb-4" />

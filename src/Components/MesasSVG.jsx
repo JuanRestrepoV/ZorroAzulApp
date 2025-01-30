@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import ModalTableInfo from "./Modals/ModalTableInfo"; // Importa el modal
 
-const MesasSVG = () => {
+const MesasSVG = ({onMesaClick}) => {
   const [selectedMesa, setSelectedMesa] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleMesaClick = (mesaId) => {
     setSelectedMesa(mesaId);
-    setIsModalOpen(true); // Abre el modal
+    onMesaClick(mesaId); // Abre el modal
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedMesa(null); // Limpia la selección al cerrar
-  };
+  // const closeModal = () => {
+  //   setIsModalOpen(false);
+  //   setSelectedMesa(null); // Limpia la selección al cerrar
+  // };
 
   return (
     <div
@@ -455,10 +455,10 @@ const MesasSVG = () => {
         </g>
       </svg>
 
-      {/* Modal para mostrar información */}
+      {/* Modal para mostrar información
       {isModalOpen && (
         <ModalTableInfo mesaId={selectedMesa} closeModal={closeModal} />
-      )}
+      )} */}
     </div>
   );
 };

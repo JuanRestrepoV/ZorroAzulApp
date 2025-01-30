@@ -11,6 +11,7 @@ const ModalTimeSlot = ({
 
   const handleTimeSlotClick = (slot) => {
     setTimeSlot(slot); // Establecer la franja horaria seleccionada
+
   };
 
   const isSelected = (slot) => selectedTimeSlot === slot;

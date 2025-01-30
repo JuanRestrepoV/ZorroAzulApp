@@ -1,42 +1,20 @@
 import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext'; 
 
 function LoginModal({ onClose, openRegisterModal }) {
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const { login, error, message, setError, setMessage, loading, setLoading } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setErrorMessage("");
-    setSuccessMessage("");
+    setError("");
+    setMessage("");
 
     const email = e.target.email.value;
     const password = e.target.password.value;
+    
+    await login(email, password);
 
-    try {
-      const response = await fetch('http://localhost:5000/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Login successful:", data);
-        setSuccessMessage("Iniciando sesión...");
-        setTimeout(() => {
-          window.location.href = '/dashboard/user';
-        }, 1500); // Retraso antes de redirigir
-      } else {
-        const errorData = await response.json();
-        setErrorMessage(errorData.error || "Error al iniciar sesión.");
-      }
-    } catch (error) {
-      setErrorMessage("Error al conectar con el servidor.");
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -50,7 +28,7 @@ function LoginModal({ onClose, openRegisterModal }) {
         </button>
 
         <div className="w-1/2 p-6 flex flex-col justify-center">
-          <h2 className="text-xl font-bold mb-4 text-center text-gray-900">Inicia sesión</h2>
+          <h2 className="text-xl font-medium mb-4 text-center text-gray-900">Inicia sesión</h2>
           <form className="space-y-4" onSubmit={handleLogin}>
             <label className="block">
               <span className="text-sm font-semibold text-gray-700">Correo Electrónico</span>
@@ -90,8 +68,8 @@ function LoginModal({ onClose, openRegisterModal }) {
             )}
           </form>
 
-          {errorMessage && <p className="text-red-600 text-sm mt-4 text-center">{errorMessage}</p>}
-          {successMessage && <p className="text-green-600 text-sm mt-4 text-center">{successMessage}</p>}
+          {error && <p className="text-red-600 text-sm mt-4 text-center">{error}</p>}
+          {message && <p className="text-green-600 text-sm mt-4 text-center">{message}</p>}
 
           <p className="text-center text-sm mt-4">
             ¿Aún no tienes cuenta?{" "}

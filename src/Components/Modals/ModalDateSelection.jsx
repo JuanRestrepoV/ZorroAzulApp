@@ -7,7 +7,7 @@ function ModalDateSelection({ openFloorSelectionModal, closeDateSelectionModal, 
 
   const handleDateChange = (date) => {
     setLocalSelectedDate(date);
-    setSelectedDate(date); // Actualiza la fecha en el estado principal
+    setSelectedDate(date.toISOString()); // Actualiza la fecha en el estado principal
   };
 
   const handleContinue = () => {
@@ -38,7 +38,7 @@ function ModalDateSelection({ openFloorSelectionModal, closeDateSelectionModal, 
         </button>
 
         {/* Título */}
-        <h2 className="text-lg text-white font-semibold mb-4 text-center">
+        <h2 className="text-lg text-white font-medium mb-4 text-center">
           Selecciona una fecha
         </h2>
         <hr className="border-t-2 border-lime-500 mb-4" />
@@ -52,7 +52,7 @@ function ModalDateSelection({ openFloorSelectionModal, closeDateSelectionModal, 
             onChange={handleDateChange} // Actualiza la fecha seleccionada
             inline
             minDate={new Date()}
-            className="text-black"
+            className="text-black "
           />
         </div>
 

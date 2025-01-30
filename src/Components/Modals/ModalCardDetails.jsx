@@ -3,6 +3,10 @@ import React from "react";
 const ModalCardDetails = ({ selectedCard, closeModal, openReserveModal, goBack }) => {
   if (!selectedCard) return null;
 
+  const formattedPrice = (price) => {
+    price = Math.floor(price);
+    return price.toLocaleString('es-CO');
+  }
   return (
     <div
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
@@ -43,7 +47,7 @@ const ModalCardDetails = ({ selectedCard, closeModal, openReserveModal, goBack }
         <div className="w-full md:w-1/2 flex flex-col justify-between overflow-auto">
           <div>
             <h2 className="text-xl font-FuenteTitulos mb-2">{selectedCard.title}</h2>
-            <p className="text-sm font-FuenteTitulos mb-2">{selectedCard.capacity}</p>
+            <p className="text-sm font-FuenteTitulos mb-2">{selectedCard.type_event}</p>
             <p className="text-sm font-Textos mb-4">{selectedCard.description}</p>
           </div>
           {selectedCard.services && (
@@ -54,17 +58,17 @@ const ModalCardDetails = ({ selectedCard, closeModal, openReserveModal, goBack }
                   <div key={index} className="flex flex-col items-center text-center">
                     <img
                       src={service.image}
-                      alt={service.title}
+                      alt={service.name}
                       className="w-16 h-16 object-cover rounded mb-1"
                     />
-                    <span className="text-xs font-semibold">{service.title}</span>
+                    <span className="text-xs font-semibold">{service.name}</span>
                   </div>
                 ))}
               </div>
             </div>
           )}
           <div className="mt-4">
-            <p className="text-sm font-bold mb-4">Precio: {selectedCard.price}</p>
+            <p className="text-sm font-bold mb-4">Precio: {formattedPrice(selectedCard.price)}</p>
             <button
               onClick={openReserveModal}
               className="px-4 py-2 bg-lime-500 text-white font-Textos rounded-lg hover:bg-lime-600"

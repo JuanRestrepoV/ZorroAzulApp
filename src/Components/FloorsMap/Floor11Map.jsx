@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MesasSVG from "../MesasSVG";
 import ModalTableInfo from "../Modals/ModalTableInfo";
 import ModalAdditionalServices from "../Modals/ModalAdditionalServices";
 import ModalSummary from "../Modals/ModalSummary";
+import { getAditionalServices } from "../../../services/services";
 
 const Floor11Map = () => {
   const [selectedMesa, setSelectedMesa] = useState(null);
@@ -12,17 +13,17 @@ const Floor11Map = () => {
   const [isSummaryModalOpen, setIsSummaryModalOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState([]);
   const [validationMessage, setValidationMessage] = useState("");
-  const [reservationDetails, setReservationDetails] = useState({
-    event: "Cumpleaños",
-    date: "2024-12-12",
-    time: "7:00 PM",
-    capacity: 5,
-    floor: "11",
-    tables: [],
-    services: [],
-  });
+  const [services, setServices] = useState([]);
+  const [reservationDetails, setReservationDetails] = useState(JSON.parse(localStorage.getItem("reservationDetails")));
 
   const navigate = useNavigate();
+  useEffect(() => {
+    getAditionalServices().then((response) => {
+      setServices(response.data);
+    }).catch((error) => {
+      console.log(error);
+    });
+  }, []);
 
   const handleMesaClick = (mesaId) => {
     setSelectedMesa(mesaId);
@@ -83,7 +84,7 @@ const Floor11Map = () => {
         <ModalTableInfo
           mesaId={selectedMesa}
           closeModal={closeTableInfoModal}
-          openAdditionalServicesModal={openAdditionalServicesModal} // Se pasa correctamente
+          openAdditionalServicesModal={openAdditionalServicesModal}
         />
       )}
       {isAdditionalServicesModalOpen && (
@@ -94,11 +95,12 @@ const Floor11Map = () => {
           toggleService={(service) =>
             setSelectedServices((prev) =>
               prev.includes(service)
-                ? prev.filter((s) => s !== service)
+                ? prev.filter((s) => s.id !== service.id)
                 : [...prev, service]
             )
           }
           validationMessage={validationMessage}
+          aditionalServices={services}
         />
       )}
       {isSummaryModalOpen && (
@@ -106,6 +108,9 @@ const Floor11Map = () => {
           reservationDetails={reservationDetails}
           closeModal={closeSummaryModal}
           confirmReservation={handleFinalConfirmation}
+          Mesa={selectedMesa}
+          aditionalServices={selectedServices}
+          // aditionalServices={services}
         />
       )}
     </div>

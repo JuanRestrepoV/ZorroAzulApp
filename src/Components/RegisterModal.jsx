@@ -1,39 +1,42 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useAuth } from '../context/AuthContext';
 
 const RegisterModal = ({ onClose, openLoginModal }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const { registerData, error, message, setError, setMessage, loading, setLoading } = useAuth();
+
 
   const registerUser = async (user) => {
     setLoading(true);
-    setErrorMessage("");
-    setSuccessMessage("");
+    setError("");
+    setMessage("");
 
-    try {
-      const response = await fetch('http://localhost:5000/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(user),
-      });
+    await registerData(user.username, user.email, user.password);
 
-      if (response.ok) {
-        setSuccessMessage("Usuario registrado exitosamente. Redirigiendo al inicio de sesión...");
-        setTimeout(() => {
-          openLoginModal();
-        }, 1500); // Retraso antes de abrir el modal de login
-      } else {
-        const errorData = await response.json();
-        setErrorMessage(errorData.error || "Error al registrar usuario.");
-      }
-    } catch (error) {
-      setErrorMessage("Error al conectar con el servidor.");
-    } finally {
-      setLoading(false);
-    }
   };
+  //   try {
+  //     const response = await fetch('http://localhost:8000/auth/api/register/', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify(user),
+  //     });
+
+  //     if (response.ok) {
+  //       setSuccessMessage("Usuario registrado exitosamente. Redirigiendo al inicio de sesión...");
+  //       setTimeout(() => {
+  //         openLoginModal();
+  //       }, 1500); // Retraso antes de abrir el modal de login
+  //     } else {
+  //       const errorData = await response.json();
+  //       setErrorMessage(errorData.error || "Error al registrar usuario.");
+  //     }
+  //   } catch (error) {
+  //     setErrorMessage("Error al conectar con el servidor.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-white/40 backdrop-blur-sm z-50">
@@ -46,7 +49,7 @@ const RegisterModal = ({ onClose, openLoginModal }) => {
         </button>
 
         <div className="w-1/2 p-6 flex flex-col justify-center">
-          <h4 className="text-2xl font-bold text-center mb-4">Registrate</h4>
+          <h4 className="text-2xl font-medium text-center mb-4">Registrate</h4>
           <form onSubmit={handleSubmit(registerUser)} className="space-y-4">
             <label className="block">
               <span className="text-sm font-semibold text-gray-700">Nombre de Usuario</span>
@@ -96,8 +99,8 @@ const RegisterModal = ({ onClose, openLoginModal }) => {
             )}
           </form>
 
-          {errorMessage && <p className="text-red-600 text-sm mt-4 text-center">{errorMessage}</p>}
-          {successMessage && <p className="text-green-600 text-sm mt-4 text-center">{successMessage}</p>}
+          {error && <p className="text-red-600 text-sm mt-4 text-center">{error}</p>}
+          {message && <p className="text-green-600 text-sm mt-4 text-center">{message}</p>}
 
           <p className="text-center text-sm mt-4">
             Ya tienes cuenta?{" "}

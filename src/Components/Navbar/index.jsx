@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram, faFacebook, faTiktok } from '@fortawesome/free-brands-svg-icons';
 import { faBars, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -9,9 +9,10 @@ const Navbar = () => {
     const location = useLocation();
     const isDashboardRoute = location.pathname.includes('/dashboard');
     const isAdminRoute = location.pathname === '/dashboard/admin';
-
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+    const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);    
+    let user = JSON.parse(localStorage.getItem('user'));
+    const navigate = useNavigate();
 
     const socialIcons = (
         <div className="flex items-center gap-4">
@@ -54,14 +55,16 @@ const Navbar = () => {
             </div>
 
             {/* Icono de usuario en el lado derecho */}
-            <div className="flex-grow flex justify-end">
+            { user.role === 'admin' && location.pathname === '/dashboard/user' && (
+                <div className="flex-grow flex justify-end">
                 <button
-                    onClick={() => setIsLoginOpen(true)}
+                    onClick={() => navigate('/dashboard/admin')}
                     className="text-white hover:bg-yellow-500 hover:text-black px-3 py-2 rounded-full border border-white"
                 >
                     👤
                 </button>
             </div>
+            )}
 
             {/* Sidebar para Dashboard */}
             {isSidebarOpen && isDashboardRoute && (

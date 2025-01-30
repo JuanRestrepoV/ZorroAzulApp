@@ -7,15 +7,15 @@ const ModalCapacity = ({
   setSelectedCapacity,
   goBack,
 }) => {
-  const [localCapacity, setLocalCapacity] = useState(selectedCapacity || 0); // Inicializa en 0.
 
   const handleCapacityChange = (e) => {
     const value = parseInt(e.target.value, 10);
-    if (!isNaN(value) && value >= 0) setLocalCapacity(value); // Permite 0 o valores positivos.
+    if (!isNaN(value) && value >= 0) setSelectedCapacity(value); // Permite 0 o valores positivos.
   };
 
   const handleConfirm = () => {
-    setSelectedCapacity(localCapacity);
+    console.log(selectedCapacity);
+    setSelectedCapacity(selectedCapacity);
     openDateSelectionModal(); // Llama al modal correcto
   };
 
@@ -47,7 +47,7 @@ const ModalCapacity = ({
         </button>
 
         {/* Título */}
-        <h2 className="text-lg text-white font-semibold mb-4 text-center">
+        <h2 className="text-lg text-white font-medium mb-4 text-center">
           Selecciona la cantidad de personas
         </h2>
         <hr className="border-t-2 border-lime-500 mb-4" />
@@ -57,7 +57,7 @@ const ModalCapacity = ({
           <input
             type="number"
             min="0" // Asegura que el valor mínimo sea 0.
-            value={localCapacity}
+            value={selectedCapacity}
             onChange={handleCapacityChange}
             className="w-20 p-2 text-center bg-gray-700 text-white rounded border-2 border-lime-500 focus:outline-none focus:ring-2 focus:ring-lime-500"
           />
@@ -66,16 +66,16 @@ const ModalCapacity = ({
 
         {/* Botón de confirmar */}
         <button
-  onClick={handleConfirm}
-  className={`w-full py-2 rounded-lg font-semibold transition-all ${
-    localCapacity > 0
-      ? "bg-lime-500 text-white hover:bg-lime-600"
-      : "bg-gray-400 text-gray-700 cursor-not-allowed"
-  }`}
-  disabled={localCapacity === 0} // Deshabilitar si no hay selección válida
->
-  Siguiente
-</button>
+          onClick={handleConfirm}
+          className={`w-full py-2 rounded-lg font-semibold transition-all ${
+            selectedCapacity > 0
+              ? "bg-lime-500 text-white hover:bg-lime-600"
+              : "bg-gray-400 text-gray-700 cursor-not-allowed"
+          }`}
+          disabled={selectedCapacity === 0} // Deshabilitar si no hay selección válida
+        >
+          Siguiente
+        </button>
       </div>
     </div>
   );

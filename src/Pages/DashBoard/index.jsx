@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../Components/Navbar/Layout";
 import ModalCardDetails from "../../Components/Modals/ModalCardDetails";
@@ -8,38 +8,8 @@ import ModalCapacity from "../../Components/Modals/ModalCapacity";
 import ModalFloorSelection from "../../Components/Modals/ModalFloorSelection";
 import ModalDateSelection from "../../Components/Modals/ModalDateSelection";
 import backgroundImage from "../../Assets/dashboardBackground.png";
-
-const cardData = [
-  {
-    id: 1,
-    title: "Ritos del fuego sagrado",
-    capacity: "CUMPLEAÑOS",
-    description:
-      "Este paquete de cumpleaños te invita a celebrar un renacimiento especial, guiado por los ritos del fuego sagrado. Sumergete en una experiencia única y significativa.",
-    image:
-      "https://i.postimg.cc/DyJLb4qX/Foto-portada-paquete-2-cumplea-os.png",
-    services: [
-      { title: "Decoración Ancestral", image: "https://i.postimg.cc/fy5QGV6K/Foto-1-paquete-1-cumplea-os.png" },
-      { title: "Aviso en Madera", image: "https://i.postimg.cc/qRh9mmLp/Foto-2-paquete-cumplea-os-1.png" },
-      { title: "Postre y Tarjeta", image: "https://i.postimg.cc/52QL2Ln6/Foto-3-paquete-cumplea-os-1.png" },
-    ],
-    price: "$161.116",
-  },
-  {
-    id: 2,
-    title: "Sendero de las Estrellas",
-    capacity: "Cumpleaños",
-    description:
-      "Embarcate en un viaje encantador con este paquete de cumpleaños, diseñado para guiar al homenajeado/a a través de un camino de sabiduría estelar y magia celestial.",
-    image: "https://i.postimg.cc/wj1x58M3/Foto-cumplea-os-basico.png",
-    services: [
-      { title: "Decoración Ancestral", image: "https://i.postimg.cc/fy5QGV6K/Foto-1-paquete-1-cumplea-os.png" },
-      { title: "Aviso en Madera", image: "https://i.postimg.cc/qRh9mmLp/Foto-2-paquete-cumplea-os-1.png" },
-      { title: "Postre y Tarjeta", image: "https://i.postimg.cc/52QL2Ln6/Foto-3-paquete-cumplea-os-1.png" },
-    ],
-    price: "$161.116",
-  },
-];
+import { getEvents } from "../../../services/events";
+import { getFloors } from "../../../services/floors";
 
 function DashBoard() {
   const [selectedCard, setSelectedCard] = useState(null);
@@ -53,10 +23,13 @@ function DashBoard() {
   const [selectedHourRange, setSelectedHourRange] = useState(null);
   const [selectedCapacity, setSelectedCapacity] = useState(0);
   const [selectedFloor, setSelectedFloor] = useState(null);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [floors, setFloors] = useState([]);
   const navigate = useNavigate();
 
   const openModal = (card) => setSelectedCard(card);
-
+  
   const closeModal = () => {
     setSelectedCard(null);
     setIsTimeSlotModalOpen(false);
@@ -71,6 +44,40 @@ function DashBoard() {
     setSelectedFloor(null);
   };
 
+  // const token = Cookies.get('auth_token');
+  // console.log(token);
+  // useEffect(() => {
+  //   getEvents().then((response) => {
+  //     setEvents(response.data);
+  //     setLoading(false);
+  //   }).catch((error) => {
+  //     console.log(error);
+  //   });
+  // }, []);
+  useEffect(() => {
+    Promise.all([getEvents(), getFloors()]).then(([events, floors]) => {
+      setEvents(events.data);
+      setFloors(floors.data);
+      setLoading(false);
+    }).catch((error) => {
+      console.log(error);
+      setLoading(false);
+    });
+  }, [])
+
+  if (selectedTimeSlot != null && selectedHourRange != null && selectedCapacity != null && selectedDate != null && selectedFloor != null) {
+    localStorage.setItem(
+      "reservationDetails", // Clave para identificar el objeto
+      JSON.stringify({
+        date: selectedDate,
+        time: selectedTimeSlot,
+        hourRange: selectedHourRange,
+        capacity: selectedCapacity,
+        floor: selectedFloor,
+        event: selectedCard,
+        tables: [],
+      }));
+  }
   const openTimeSlotModal = () => {
     if (!selectedCard) {
       alert("Por favor selecciona un evento para reservar.");
@@ -146,9 +153,18 @@ function DashBoard() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen" style={{ backgroundImage: `url(${backgroundImage})` }}>
+        <div className="loader border-t-2 border-black rounded-full w-10 h-10 animate-spin"></div>
+        <span className="ml-2 text-black text-5xl">Cargando eventos...</span>
+      </div>
+    )
+  };
+
   return (
     <Layout>
-      <div className="container mx-auto flex items-center justify-center">
+      <div className="container mx-auto flex items-center justify-center mt-60">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -160,19 +176,20 @@ function DashBoard() {
         <div className="relative z-10 flex flex-col items-center justify-start">
           <h1 className="text-3xl font-FuenteTitulos mb-6 text-white">EVENTOS</h1>
           <div className="grid grid-cols-2 gap-6">
-            {cardData.map((card) => (
+            {events.map((card) => (
               <div
                 key={card.id}
                 className="bg-gray-200 p-2 rounded-lg shadow-lg cursor-pointer hover:scale-105 transition-transform duration-300 aspect-square w-80"
                 onClick={() => openModal(card)}
               >
-                <img src={card.image} alt={card.title} className="w-full h-full object-cover rounded" />
-                <h2 className="text-md font-bold mt-2 text-center">{card.title}</h2>
-                <p className="text-xs text-center font-semibold text-gray-500">{card.capacity}</p>
+                <img src={`${card.image}`} alt={card.title} className="w-full h-full object-cover rounded" />
+                <h2 className="text-md font-medium mt-2 text-center">{card.title}</h2>
+                <p className="text-xs text-center font-semibold text-gray-500">{card.type_event}</p>
                 <p className="text-xs text-justify mt-1">
-                  {card.description.length > 50
+                  {/* {card.description.length > 50
                     ? `${card.description.slice(0, 50)}...`
-                    : card.description}
+                    : card.description} */}
+                    { card.short_description }
                 </p>
               </div>
             ))}
@@ -231,6 +248,7 @@ function DashBoard() {
             openSpaceSelectionModal={() => navigate("/piso-11")}
             selectedFloor={selectedFloor}
             setSelectedFloor={setSelectedFloor}
+            floors={floors}
             goBack={goBack}
           />
         )}
