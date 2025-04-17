@@ -1,9 +1,11 @@
 import React from "react";
+import PersonIcon from '@mui/icons-material/Person';
 
-const ModalTableInfo = ({ mesaId, closeModal, openAdditionalServicesModal }) => {
+const ModalTableInfo = ({ table, closeModal, openAdditionalServicesModal }) => {
   const handleConfirm = () => {
+    
     closeModal(); // Cierra el modal actual
-    openAdditionalServicesModal(); // Abre el siguiente modal
+    // openAdditionalServicesModal(); // Abre el siguiente modal
   };
 
   return (
@@ -27,12 +29,13 @@ const ModalTableInfo = ({ mesaId, closeModal, openAdditionalServicesModal }) => 
 
         {/* Contenido del modal */}
         <h2 className="text-lg text-white font-medium mb-4 text-center">
-          Detalles de la Mesa {mesaId}
+          Detalles de la Mesa {table?.id}
         </h2>
         <hr className="border-t-2 border-lime-500 mb-4" />
-        <p className="text-white mb-4">
-          Aquí puedes añadir información específica de la mesa {mesaId}.
-        </p>
+        <p className="text-white mb-4">Cantidad Maxima: {table?.quantity}</p>
+        {/* { [...Array(table.quantity)].map((_, index) => (
+            <PersonIcon key={index} className="text-lime-500" />
+        )) } */}
 
         {/* Botón de confirmar */}
         <button

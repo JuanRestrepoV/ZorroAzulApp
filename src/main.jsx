@@ -5,9 +5,9 @@ import App from './Pages/App';
 import './index.css';
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <BrowserRouter> {/* Envuelve toda tu aplicación con BrowserRouter */}
       <App />
     </BrowserRouter>
-  </StrictMode>
+  // </StrictMode>
 );

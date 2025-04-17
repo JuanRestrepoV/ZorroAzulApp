@@ -1,259 +1,191 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Layout from "../../Components/Navbar/Layout";
-import ModalCardDetails from "../../Components/Modals/ModalCardDetails";
-import ModalTimeSlot from "../../Components/Modals/ModalTimeSlot";
-import ModalHourSelection from "../../Components/Modals/ModalHourSelection";
-import ModalCapacity from "../../Components/Modals/ModalCapacity";
-import ModalFloorSelection from "../../Components/Modals/ModalFloorSelection";
-import ModalDateSelection from "../../Components/Modals/ModalDateSelection";
-import backgroundImage from "../../Assets/dashboardBackground.png";
 import { getEvents } from "../../../services/events";
 import { getFloors } from "../../../services/floors";
+import { useLoader } from "@/context/Loader";
+import { Card, CardHeader, CardBody, CardFooter } from "@heroui/card";
+import { Image } from "@heroui/image";
+import { Modal, ModalContent } from "@heroui/modal";
+import ReservationForm from "@/Components/Reservations/ReservationForm";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 function DashBoard() {
-  const [selectedCard, setSelectedCard] = useState(null);
-  const [isTimeSlotModalOpen, setIsTimeSlotModalOpen] = useState(false);
-  const [isHourSelectionModalOpen, setIsHourSelectionModalOpen] = useState(false);
-  const [isCapacityModalOpen, setIsCapacityModalOpen] =useState(false);
-  const [isDateSelectionModalOpen, setIsDateSelectionModalOpen] = useState(false);
-  const [isFloorSelectionModalOpen, setIsFloorSelectionModalOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
-  const [selectedHourRange, setSelectedHourRange] = useState(null);
-  const [selectedCapacity, setSelectedCapacity] = useState(0);
-  const [selectedFloor, setSelectedFloor] = useState(null);
   const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [floors, setFloors] = useState([]);
-  const navigate = useNavigate();
+  const { showSpinner, hideSpinner } = useLoader();
+  const [openModal, setOpenModal] = useState(false);
+  const [eventSelected, setEventSelected] = useState(null);
+  const [view, SetView] = useState("Home");
 
-  const openModal = (card) => setSelectedCard(card);
-  
-  const closeModal = () => {
-    setSelectedCard(null);
-    setIsTimeSlotModalOpen(false);
-    setIsHourSelectionModalOpen(false);
-    setIsCapacityModalOpen(false);
-    setIsDateSelectionModalOpen(false);
-    setIsFloorSelectionModalOpen(false);
-    setSelectedDate(null);
-    setSelectedTimeSlot(null);
-    setSelectedHourRange(null);
-    setSelectedCapacity(0);
-    setSelectedFloor(null);
-  };
-
-  // const token = Cookies.get('auth_token');
-  // console.log(token);
-  // useEffect(() => {
-  //   getEvents().then((response) => {
-  //     setEvents(response.data);
-  //     setLoading(false);
-  //   }).catch((error) => {
-  //     console.log(error);
-  //   });
-  // }, []);
   useEffect(() => {
-    Promise.all([getEvents(), getFloors()]).then(([events, floors]) => {
-      setEvents(events.data);
-      setFloors(floors.data);
-      setLoading(false);
-    }).catch((error) => {
-      console.log(error);
-      setLoading(false);
-    });
-  }, [])
-
-  if (selectedTimeSlot != null && selectedHourRange != null && selectedCapacity != null && selectedDate != null && selectedFloor != null) {
-    localStorage.setItem(
-      "reservationDetails", // Clave para identificar el objeto
-      JSON.stringify({
-        date: selectedDate,
-        time: selectedTimeSlot,
-        hourRange: selectedHourRange,
-        capacity: selectedCapacity,
-        floor: selectedFloor,
-        event: selectedCard,
-        tables: [],
-      }));
-  }
-  const openTimeSlotModal = () => {
-    if (!selectedCard) {
-      alert("Por favor selecciona un evento para reservar.");
-      return;
-    }
-    setIsTimeSlotModalOpen(true);
-  };
-
-  const closeTimeSlotModal = () => setIsTimeSlotModalOpen(false);
-
-  const openHourSelectionModal = () => {
-    if (!selectedTimeSlot) {
-      alert("Por favor selecciona una franja horaria antes de continuar.");
-      return;
-    }
-    setIsHourSelectionModalOpen(true);
-    setIsTimeSlotModalOpen(false);
-  };
-
-  const closeHourSelectionModal = () => setIsHourSelectionModalOpen(false);
-
-  const openCapacityModal = () => {
-    if (!selectedHourRange) {
-      alert("Por favor selecciona un rango de horas antes de continuar.");
-      return;
-    }
-    setIsCapacityModalOpen(true);
-    setIsHourSelectionModalOpen(false);
-  };
-
-  const closeCapacityModal = () => setIsCapacityModalOpen(false);
-
-  const openDateSelectionModal = () => {
-    if (selectedCapacity <= 0) {
-      alert("Por favor selecciona una cantidad válida de personas antes de continuar.");
-      return;
-    }
-    setIsDateSelectionModalOpen(true);
-    setIsCapacityModalOpen(false);
-  };
-
-  const closeDateSelectionModal = () => setIsDateSelectionModalOpen(false);
-
-  const openFloorSelectionModal = () => {
-    if (!selectedDate) {
-      alert("Por favor selecciona una fecha antes de continuar.");
-      return;
-    }
-    setIsFloorSelectionModalOpen(true);
-    setIsDateSelectionModalOpen(false);
-  };
-
-  const closeFloorSelectionModal = () => setIsFloorSelectionModalOpen(false);
-
-  const goBack = () => {
-    if (isFloorSelectionModalOpen) {
-      setIsFloorSelectionModalOpen(false);
-      setIsDateSelectionModalOpen(true);
-    } else if (isDateSelectionModalOpen) {
-      setIsDateSelectionModalOpen(false);
-      setIsCapacityModalOpen(true);
-    } else if (isCapacityModalOpen) {
-      setIsCapacityModalOpen(false);
-      setIsHourSelectionModalOpen(true);
-    } else if (isHourSelectionModalOpen) {
-      setIsHourSelectionModalOpen(false);
-      setIsTimeSlotModalOpen(true);
-    } else if (isTimeSlotModalOpen) {
-      setIsTimeSlotModalOpen(false);
-      setSelectedCard(null);
-    } else {
-      setSelectedCard(null);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen" style={{ backgroundImage: `url(${backgroundImage})` }}>
-        <div className="loader border-t-2 border-black rounded-full w-10 h-10 animate-spin"></div>
-        <span className="ml-2 text-black text-5xl">Cargando eventos...</span>
-      </div>
-    )
-  };
+    showSpinner();
+    Promise.all([getEvents(), getFloors()])
+      .then(([events, floors]) => {
+        setEvents(events.data);
+        setFloors(floors.data);
+        hideSpinner();
+      })
+      .catch((error) => {
+        console.log(error);
+        hideSpinner();
+      });
+  }, []);
 
   return (
-    <Layout>
-      <div className="container mx-auto flex items-center justify-center mt-60">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `url(${backgroundImage})`,
-          }}
-        ></div>
+    <div className="min-h-screen relative">
+      <AnimatePresence mode="wait">
+        {view === "Home" && (
+          <motion.div
+            key="Home"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 50 }}
+            transition={{ duration: 0.3 }}
+            className="absolute w-full"
+          >
+            <div className="fixed inset-0 w-full h-full bg-cover bg-center bg-no-repeat z-0 bg-[url('/src/Assets/dashboardBackground.png')] bg-black/30" />
+            <div className="relative z-10 pt-24 px-4 pb-10  md:flex md:items-center md:justify-center">
+              <div className="max-w-5xl mx-auto flex flex-col items-center justify-center w-full">
+                <h1 className="text-3xl my-10 text-lime-500">EVENTOS</h1>
+                <div className="w-full px-4">
+                  <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    {events.map((card, index) => (
+                      <Card
+                        key={index}
+                        isPressable
+                        shadow="sm"
+                        onPress={() => {
+                          setEventSelected(card);
+                          setOpenModal(true);
+                        }}
+                        className="shadow-lg bg-white/90 backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:shadow-md"
+                      >
+                        <CardHeader className="p-3 pb-1 flex flex-col items-center">
+                          <Image
+                            src={card.image}
+                            alt={card.title}
+                            width={300}
+                            height={200}
+                            isBlurred
+                            isZoomed
+                            isRounded
+                            removeWrapper
+                          />
+                        </CardHeader>
 
-        <div className="absolute inset-0 bg-black opacity-50"></div>
-        <div className="relative z-10 flex flex-col items-center justify-start">
-          <h1 className="text-3xl font-FuenteTitulos mb-6 text-white">EVENTOS</h1>
-          <div className="grid grid-cols-2 gap-6">
-            {events.map((card) => (
-              <div
-                key={card.id}
-                className="bg-gray-200 p-2 rounded-lg shadow-lg cursor-pointer hover:scale-105 transition-transform duration-300 aspect-square w-80"
-                onClick={() => openModal(card)}
-              >
-                <img src={`${card.image}`} alt={card.title} className="w-full h-full object-cover rounded" />
-                <h2 className="text-md font-medium mt-2 text-center">{card.title}</h2>
-                <p className="text-xs text-center font-semibold text-gray-500">{card.type_event}</p>
-                <p className="text-xs text-justify mt-1">
-                  {/* {card.description.length > 50
-                    ? `${card.description.slice(0, 50)}...`
-                    : card.description} */}
-                    { card.short_description }
-                </p>
+                        <CardBody className="p-3 pt-1 flex flex-col items-center">
+                          <h2 className="text-md mt-2 text-center font-semibold">
+                            {card.title}
+                          </h2>
+                          <p className="text-xs text-center text-gray-500">
+                            {card.type_event}
+                          </p>
+                        </CardBody>
+
+                        <CardFooter className="p-3 pt-0">
+                          <p className="text-xs text-justify text-gray-600">
+                            {card.short_description}
+                          </p>
+                        </CardFooter>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
               </div>
-            ))}
+            </div>
+          </motion.div>
+        )}
+        {view === "FomReservation" && (
+          <motion.div
+            key="FomReservation"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -50 }}
+            transition={{ duration: 0.3 }}
+            className="absolute w-full"
+          >
+            <div className="p-4 w-full rounded shadow flex justify-center items-center bg-[url('/src/Assets/dashboardBackground.png')] bg-cover bg-center bg-no-repeat">
+              <ReservationForm floors={floors} view={SetView} eventSelected={eventSelected} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <Modal
+        isOpen={openModal}
+        onClose={setOpenModal}
+        backdrop="opaque"
+        classNames={{
+          body: "py-6",
+          backdrop: "bg-[#292f46]/50 backdrop-opacity-40",
+          base: "border-[#292f46] bg-slate-200 dark:bg-[#19172c] text-[#a8b0d3]",
+          header: "border-b-[1px] border-[#292f46]",
+          footer: "border-t-[1px] border-[#292f46]",
+          closeButton: "hover:bg-white/5 active:bg-white/10",
+        }}
+      >
+        <ModalContent className="w-[90%] max-w-4xl h-auto md:h-[500px] my-auto mx-auto rounded-xl ">
+          <div className="flex flex-col md:flex-row gap-6 p-6 h-full">
+            <div className="flex-shrink-0 w-full md:w-1/2 h-full">
+              <Image
+                src={eventSelected?.image}
+                alt={eventSelected?.title}
+                isBlurred
+                radius="lg"
+                isRounded
+                removeWrapper
+                // isZoomed
+                className="md:w-full md:h-full object-cover w-80 h-60 bg-center bg-no-repeat"
+              />
+            </div>
+
+            <div className="w-full md:w-1/2 flex flex-col justify-center items-center gap-4">
+              <h1 className="text-xl font-semibold text-center text-lime-500">
+                {eventSelected?.title}
+              </h1>
+
+              <p className="text-sm text-justify text-black">
+                {eventSelected?.description || "Descripción del evento..."}
+              </p>
+
+              <h1 className="text-lime-500">Servicios incluidos</h1>
+              <div className="flex gap-4">
+                {eventSelected?.services.map((service) => (
+                  <div
+                    key={service.id}
+                    className="flex flex-col gap-2 items-center"
+                  >
+                    <Image
+                      src={service.image}
+                      alt={service.name}
+                      isBlurred
+                      radius="lg"
+                      isRounded
+                      removeWrapper
+                      width={100}
+                      height={100}
+                      isZoomed
+                    />
+                    <p className="text-lime-500">{service.name}</p>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                onClick={() => {
+                  setOpenModal(false);
+                  SetView("FomReservation");
+                }}
+                className="w-full mt-6 py-2 bg-lime-500 text-white font-semibold rounded-lg hover:bg-lime-600 transition-all shadow-lg"
+              >
+                Reservar
+              </button>
+            </div>
           </div>
-
-        </div>
-
-
-        {selectedCard && (
-          <ModalCardDetails
-            selectedCard={selectedCard}
-            closeModal={closeModal}
-            openReserveModal={openTimeSlotModal}
-            goBack={goBack}
-          />
-        )}
-        {isTimeSlotModalOpen && (
-          <ModalTimeSlot
-            closeTimeSlotModal={closeTimeSlotModal}
-            openHourSelectionModal={openHourSelectionModal}
-            setTimeSlot={setSelectedTimeSlot}
-            selectedTimeSlot={selectedTimeSlot}
-            goBack={goBack}
-          />
-        )}
-        {isHourSelectionModalOpen && (
-          <ModalHourSelection
-            closeHourSelectionModal={closeHourSelectionModal}
-            openCapacityModal={openCapacityModal}
-            selectedTimeSlot={selectedTimeSlot}
-            setSelectedHourRange={setSelectedHourRange}
-            selectedHourRange={selectedHourRange}
-            goBack={goBack}
-          />
-        )}
-        {isCapacityModalOpen && (
-          <ModalCapacity
-            closeCapacityModal={closeCapacityModal}
-            openDateSelectionModal={openDateSelectionModal}
-            selectedCapacity={selectedCapacity}
-            setSelectedCapacity={setSelectedCapacity}
-            goBack={goBack}
-          />
-        )}
-        {isDateSelectionModalOpen && (
-          <ModalDateSelection
-            closeDateSelectionModal={closeDateSelectionModal}
-            openFloorSelectionModal={openFloorSelectionModal}
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-          />
-        )}
-        {isFloorSelectionModalOpen && (
-          <ModalFloorSelection
-            closeFloorSelectionModal={closeFloorSelectionModal}
-            openSpaceSelectionModal={() => navigate("/piso-11")}
-            selectedFloor={selectedFloor}
-            setSelectedFloor={setSelectedFloor}
-            floors={floors}
-            goBack={goBack}
-          />
-        )}
-      </div>
-    </Layout>
+        </ModalContent>
+      </Modal>
+    </div>
   );
 }
 

@@ -20,7 +20,7 @@ function Home() {
   return (
     <Layout>
       {/* Contenedor principal con fondo de imagen */}
-      <div className="relative h-screen overflow-hidden bg-black z-0">
+      <div className="relative h-screen overflow-hidden bg-black z-0 w-full">
 
         {/* Imagen de fondo para el lado derecho */}
         <div
