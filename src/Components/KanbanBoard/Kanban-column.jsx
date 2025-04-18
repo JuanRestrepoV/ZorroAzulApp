@@ -105,3 +105,5 @@ export function KanbanColumn({
     </div>
   );
 }
+
+export default KanbanColumn;
