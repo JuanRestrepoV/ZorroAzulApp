@@ -3,7 +3,7 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram, faFacebook, faTiktok } from '@fortawesome/free-brands-svg-icons';
 import { faBars, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import logo from '../../assets/LogoZa.png';
+import logo from '../../Assets/LogoZa.png';
 
 const Navbar = () => {
     const location = useLocation();
