@@ -8,7 +8,6 @@ import { Image } from "@heroui/image";
 import { Modal, ModalContent } from "@heroui/modal";
 import ReservationForm from "@/Components/Reservations/ReservationForm";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
 
 function DashBoard() {
   const [events, setEvents] = useState([]);
