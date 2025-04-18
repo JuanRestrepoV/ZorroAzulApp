@@ -51,7 +51,7 @@ import NotFound from "../NotFound";
 import Reservas from "../Reservas";
 import DashBoard from "../DashBoard";
 import Confirmation from "../Confirmation";
-import Navbar from "../../components/Navbar";
+import Navbar from "@/components/Navbar";
 import "./App.css";
 import { AuthProvider, useAuth } from "../../context/AuthContext";
 import FloorMap from "../../components/FloorsMap/FloorMap";
