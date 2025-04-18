@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { CalendarIcon, Coffee, Music, Utensils, Wifi } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
