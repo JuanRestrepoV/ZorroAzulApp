@@ -54,10 +54,10 @@ import Confirmation from "../Confirmation";
 import Navbar from "@/components/Navbar";
 import "./App.css";
 import { AuthProvider, useAuth } from "../../context/AuthContext";
-import FloorMap from "../../components/FloorsMap/FloorMap";
 import KanbanBoardPage from "../KanbanBoard";
 import { LoaderProvider } from "@/context/Loader";
 import { Toaster } from "sonner";
+import FloorMap from "@/components/FloorsMap/FloorMap";
 
 // Componente PrivateRoute para proteger rutas
 const PrivateRoute = ({ element, requiredRole, ...rest }) => {

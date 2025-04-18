@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Layout from "../../components/Navbar/Layout";
+import Layout from "@/components/Navbar/Layout";
 
 const SpaceSelection = () => {
   const location = useLocation();

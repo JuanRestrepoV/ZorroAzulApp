@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Layout from "../../components/Navbar/Layout";
-import LoginModal from "../../components/LoginModal";
-import RegisterModal from "../../components/RegisterModal";
+import Layout from "@/components/Navbar/Layout";
+import LoginModal from "@/components/LoginModal";
+import RegisterModal from "@/components/RegisterModal";
 
 function Home() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);

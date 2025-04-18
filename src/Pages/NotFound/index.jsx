@@ -1,4 +1,4 @@
-import Layout from "../../components/Navbar/Layout";
+import Layout from "@/components/Navbar/Layout";
 
 function NotFound() {
   return (
