@@ -6,7 +6,7 @@ import { useLoader } from "@/context/Loader";
 import { Card, CardHeader, CardBody, CardFooter } from "@heroui/card";
 import { Image } from "@heroui/image";
 import { Modal, ModalContent } from "@heroui/modal";
-import ReservationForm from "@/Components/Reservations/ReservationForm";
+import ReservationForm from "@/components/Reservations/ReservationForm";
 import { motion, AnimatePresence } from "framer-motion";
 
 function DashBoard() {
@@ -105,7 +105,11 @@ function DashBoard() {
             className="absolute w-full"
           >
             <div className="p-4 w-full rounded shadow flex justify-center items-center bg-[url('/src/Assets/dashboardBackground.png')] bg-cover bg-center bg-no-repeat">
-              <ReservationForm floors={floors} view={SetView} eventSelected={eventSelected} />
+              <ReservationForm
+                floors={floors}
+                view={SetView}
+                eventSelected={eventSelected}
+              />
             </div>
           </motion.div>
         )}

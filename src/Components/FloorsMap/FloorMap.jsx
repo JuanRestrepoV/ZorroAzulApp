@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MesasSVG from "../MesasSVG";
 import ModalTableInfo from "../Modals/ModalTableInfo";
-import ModalAdditionalServices from "../Modals/ModalAdditionalServices";
 import ModalSummary from "../Modals/ModalSummary";
 import { getAditionalServices } from "../../../services/services";
 import { getFloor } from "../../../services/floors";
-import backgroundImage from "../../Assets/dashboardBackground.png";
 import { useLoader } from "@/context/Loader";
 
 const FloorMap = () => {

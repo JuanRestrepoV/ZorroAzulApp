@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Layout from "../../Components/Navbar/Layout";
+import Layout from "../../components/Navbar/Layout";
 
 const SpaceSelection = () => {
   const location = useLocation();
@@ -26,7 +26,9 @@ const SpaceSelection = () => {
 
   const confirmSelection = () => {
     if (selectedSpace) {
-      alert(`Has seleccionado ${spaces.find((s) => s.id === selectedSpace)?.name}`);
+      alert(
+        `Has seleccionado ${spaces.find((s) => s.id === selectedSpace)?.name}`
+      );
       // Aquí podrías redirigir al siguiente paso o enviar la selección al backend.
       navigate("/confirmation");
     } else {
@@ -41,7 +43,8 @@ const SpaceSelection = () => {
         <div className="text-center text-white py-6">
           <h1 className="text-3xl font-bold mb-4">Selecciona tu espacio</h1>
           <p className="text-lg">
-            Piso seleccionado: {floor || "N/A"}, Capacidad: {capacity || "N/A"} personas
+            Piso seleccionado: {floor || "N/A"}, Capacidad: {capacity || "N/A"}{" "}
+            personas
           </p>
         </div>
 
