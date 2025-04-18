@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import { DragDropContext } from "@hello-pangea/dnd";
-import { KanbanColumn } from "./kanban-column";
+import KanbanColumn from "./Kanban-column";
 import {
   patchReserve,
   getReservesPending,

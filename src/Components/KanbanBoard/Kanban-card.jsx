@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import PersonIcon from "@/icons/PersonIcon";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AlarmIcon from "@mui/icons-material/Alarm";
 import TableBarIcon from "@mui/icons-material/TableBar";
